@@ -6,7 +6,7 @@
     * All lat/longs are in decimal degrees.
     * Code starts with the southwest corner. 'Marches' east, then moves up a 'row' and repeats.
     * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat].
-    * Optionally, it can produce a simple format for direct system entry into the Gnip Dashboard.
+    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.
 
     Command-line arguments:
         [] west, south, east, north, tag, filepath, limit_lat, limit_long, dashboard
@@ -136,17 +136,17 @@ def resizeBox(long_offset, lat, long):
     point2 = (lat, long + long_offset)
 
     distance = great_circle_distance_miles(point1, point2)
-    print 'distance = ' + str(distance)
+    #print 'distance = ' + str(distance)
 
     if distance > 24.9 and distance <=25.0:
-        print 'Bingo with long_offset=' + str(long_offset)
+        #print 'Bingo with long_offset=' + str(long_offset)
         return long_offset
     else:
         if distance < 24.9:
             long_offset = long_offset + 0.001
         if distance > 25.0:
             long_offset = long_offset - 0.001
-        print 'Resizing again...'
+        #print 'Resizing again...'
         return resizeBox(long_offset,lat,long)
 
 
