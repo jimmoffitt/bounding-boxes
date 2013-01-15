@@ -107,13 +107,14 @@ import json
    latlong paramaters are lat/long tuples, such as (40.749641,-73.99527).
 '''
 
-def great_circle_distance_miles(latlong_a, latlong_b):
+
+def great_circle_distance_miles(longlat_a, longlat_b):
 
     EARTH_CIRCUMFERENCE = 6378137     # earth circumference in meters
     METERS_IN_MILE = 1609.34
 
-    lat1, lon1 = latlong_a
-    lat2, lon2 = latlong_b
+    lon1, lat1 = longlat_a
+    lon2, lat2 = longlat_b
 
     dLat = math.radians(lat2 - lat1)
     dLon = math.radians(lon2 - lon1)
@@ -130,10 +131,10 @@ def great_circle_distance_miles(latlong_a, latlong_b):
     Recursisvely call great_circle_distance_miles(latlong_a, latlong_b) with current 2 points and
     adjust until 24.9 < X <= 25.00 miles.
 '''
-def resizeBox(long_offset, lat, long):
+def resizeBox(long_offset, long, lat):
 
-    point1 = (lat, long)
-    point2 = (lat, long + long_offset)
+    point1 = (long, lat)
+    point2 = (long + long_offset, lat)
 
     distance = great_circle_distance_miles(point1, point2)
     #print 'distance = ' + str(distance)
@@ -147,7 +148,7 @@ def resizeBox(long_offset, lat, long):
         if distance > 25.0:
             long_offset = long_offset - 0.001
         #print 'Resizing again...'
-        return resizeBox(long_offset,lat,long)
+        return resizeBox(long_offset,long, lat)
 
 
 if __name__ == "__main__":
@@ -253,7 +254,7 @@ if __name__ == "__main__":
     boxes = [] #Create list to hold
 
     #Confirm default longitude offset
-    long_offset = resizeBox(long_offset,lat_south,long_west)
+    long_offset = resizeBox(long_offset, long_west, lat_south)
 
     #Initialize Origin bounding box
     cur_west = long_west
@@ -281,7 +282,7 @@ if __name__ == "__main__":
         cur_west = long_west
 
         #Resize bounding box w.r.t. longitude offset...
-        long_offset = resizeBox(long_offset,cur_south,cur_west)
+        long_offset = resizeBox(long_offset,cur_west, cur_south)
 
         #Advance eastward, using new longitude offset.
         cur_east = cur_west + long_offset
