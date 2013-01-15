@@ -238,7 +238,6 @@ if __name__ == "__main__":
     else:
         filepath = args.filepath
 
-
     #How many columns needed to transverse West-East distance?
     columns = math.fabs(long_west - long_east)/long_offset
     #print 'Fractional columns: ' + str(columns)
