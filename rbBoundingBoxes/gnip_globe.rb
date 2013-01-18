@@ -15,11 +15,11 @@
     Operates on these fundamental objects:
         * Point
 
-    Need to be able to inspect a shapefile and build the appropriate bounding boxes.
+    Future: Need to be able to inspect a shapefile and build the appropriate bounding boxes.
 
     Supported units:
-        math: meters
-        distance: miles, kilometers, meters, feet.
+        (internal) math: meters
+        (output) distance: miles, kilometers, meters, feet.
 
     Fundamental test locations: four hemispheres, two intersections and two poles.
 
@@ -41,7 +41,6 @@
 =end
 
 include Math
-
 
 #Simple class for storing a point.
 class Point
@@ -79,22 +78,43 @@ end #of Point class.
 
 class GnipGlobe
   @version = '0.01'
+  attr_accessor :latLongUnit, :distanceUnit, :type, :radius
 
   def initialize()
+    @type = "perfect circle" #ellipsoid
+    @latLongUnit = "dd"
+    @distanceUnit = "m"
   end
 
   #CLASS constants
   PI = 3.1415926535
   RAD_PER_DEG = 0.017453293  #  PI/180
-  R_MILES = 3956           # radius of the great circle in miles
-  R_KM = 6371              # radius in kilometers...some algorithms use 6367
-  R_FEET = R_MILES * 5282   # radius in feet
-  R_METERS = R_KM * 1000    # radius in meters
+  EARTH_RADIUS_METERS = 5282000
 
 
   def to_s
     "Gnip Globe object: version " + @version
   end
+
+  def convertDistance(value,unit,toUnit)
+    @KM_IN_MILE = 1.609344
+    @METER_IN_FOOT = 0.3048
+    @METER_IN_MILE = 1609.344
+
+    if unit = toUnit then
+      return unit
+    end
+
+    if units == "m" then
+      if toUnits == "mi" then
+        return value / @METER_IN_MILE
+      end
+      if toUnits == "ft" then
+        return value / @METER_IN_FOOT
+      end
+    end
+  end
+
 
   '''
   '''
@@ -114,8 +134,6 @@ class GnipGlobe
     Returns Haversine distance between two points.
   '''
   def getHaversineDistance2(pt1,pt2)
-
-    @distances = Hash.new
 
     lon1 = pt1.x
     lat1 = pt1.y
@@ -139,18 +157,7 @@ class GnipGlobe
     a = (sin(dlat_rad/2))**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * (Math.sin(dlon_rad/2))**2
     c = 2 * Math.atan2( Math.sqrt(a), Math.sqrt(1-a))
 
-    dMi = R_MILES * c          # delta between the two points in miles
-    dKm = R_KM * c             # delta in kilometers
-    dFeet = R_FEET * c         # delta in feet
-    dMeters = R_METERS * c     # delta in meters
-
-    @distances["mi"] = dMi
-    @distances["km"] = dKm
-    @distances["ft"] = dFeet
-    @distances["m"] = dMeters
-
-    return @distances
-
+    distance = EARTH_RADIUS_METERS * c
   end
 
   def getHaversineDistance(pt1,pt2)
@@ -159,71 +166,53 @@ class GnipGlobe
     lon2 = deg2Rad(pt2.x)
     lat2 = deg2Rad(pt2.y)
 
-    2 * R_KM * asin(sqrt(sin((lat2-lat1)/2)**2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1)/2)**2))
-
+    2 * EARTH_RADIUS_METERS/1000 * asin(sqrt(sin((lat2-lat1)/2)**2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1)/2)**2))
   end
 
   def deg2Rad(degree)
     degree * PI / 180
   end
 
-
   '''
     Return "linear" distance
   '''
   def getDistance(p1,p2)
   end
-
-
-
-
-
 end #of GnipGlobe
 
-def test_haversine
+#-----------------------------------------
+#Usage examples and unit testing:
+#-----------------------------------------
 
+if __FILE__ == $0
 
   lon1 = -86.67
   lat1 =  36.12
-
-  lat2 =   33.94
-  lon2 =  -118.40
-
-  #2887.2599506071106
+  pt1 = Point.new(lon1,lat1)
+  pt2 = Point.new(-118.40,33.94)
 
   '''
   lon1 = -104.88544
   lat1 = 39.06546
-
   lon2 = -104.80
   lat2 = lat1
   '''
 
-  pt1 = Point.new(lon1,lat1)
-  pt2 = Point.new(lon2,lat2)
-
   gg = GnipGlobe.new()
-
-  p gg.getHaversineDistance(pt1,pt2)
+  p "Simplified circle algoritm: " + gg.getHaversineDistance(pt1,pt2).to_s + " meters."
+  distance = gg.getHaversineDistance2(pt1,pt2)
+  p "Haversine version: " + distance.to_s + " meters."
 
   @distances = Hash.new
-  @distances = gg.getHaversineDistance2(pt1,pt2)
+  @distances["m"] = gg.convertDistance(distance,"m","m")
+  @distances["mi"] = gg.convertDistance(distance,"m","mi")
+  @distances["km"] = distance * 1000
+  @distances["ft"] = gg.convertDistance(distance,"m","ft")
 
-
-  puts "the distance from  #{lat1}, #{lon1} to #{lat2}, #{lon2} is:"
+  puts "the distance from  #{pt1.y}, #{pt1.x} to #{pt2.y}, #{pt2.x} is:"
   puts "#{@distances['mi']} mi"
   puts "#{@distances['km']} km"
   puts "#{@distances['ft']} ft"
   puts "#{@distances['m']} m"
 
-  if ( @distances['km'].to_s.match(/7\.376*/) != nil )
-    puts "Test: Success"
-  else
-    puts "Test: Failed"
-  end
-
 end
-
-
-#UNIT TESTING...
-test_haversine

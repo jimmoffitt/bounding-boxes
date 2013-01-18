@@ -1,16 +1,78 @@
 #!/usr/bin/env ruby
 
+
+'''
+A simple script to break-up a large rectangular geographic area into smaller 25-mile square bounding boxes.
+    * All lat/longs are in decimal degrees.
+    * Code starts with the southwest corner.  Marches east, then moves up a row and repeats.
+    * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat].
+    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.
+
+    Command-line arguments:
+    [] west, south, east, north, tag, filepath, limit_lat, limit_long, dashboard
+
+'''
+
+
+include Math
 require 'json'
 require 'optparse'
-require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Much slower performance
+require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slower performance
                   #than a plain o Struct, but a handy 'on the fly' data structure.
+
+'''
+#Colorado
+-w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado"
+'''
 
 class BoundingBoxes
 
-  #Set defaults.
+  PI = 3.1415926535
+  EARTH_RADIUS_METERS = 5282000
+
+  def self.deg2Rad(degree)
+      degree * PI / 180
+  end
+
+  def self.great_circle_distance_miles(pt1, pt2)
+      lon1 = deg2Rad(pt1.west)
+      lat1 = deg2Rad(pt1.south)
+      lon2 = deg2Rad(pt2.west)
+      lat2 = deg2Rad(pt2.south)
+
+      2 * EARTH_RADIUS_METERS/1000 * asin(sqrt(sin((lat2-lat1)/2)**2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1)/2)**2))
+  end
+
+  def self.resizeBox(long_offset, west, south)
+      point1 = OpenStruct.new
+      point2 = OpenStruct.new
+
+      point1.west =  west
+      point1.south = south
+      point2.west = west + long_offset
+      point2.south = south
+
+      distance = great_circle_distance_miles(point1, point2)
+      #p "distance: " + distance.to_s
+
+      if distance > 24.9 and distance <= 25.0 then
+          long_offset
+      else
+         if distance < 24.9 then
+             long_offset = long_offset + 0.001
+         end
+         if distance > 25.0 then
+             long_offset = long_offset - 0.001
+         end
+         resizeBox(long_offset, point1.west, point1.south)
+      end
+  end
+
+  #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
   lat_offset_default = 0.35
   long_offset_default = 0.45
 
+  #TODO: move to OptionParser class -------------------
   #Parse command-line and set variables.
   OptionParser.new do |o|
     o.on('-w WEST') { |west| $west = west }
@@ -33,7 +95,6 @@ class BoundingBoxes
   sa.south = $south.to_f
   tag = $tag
   filepath = $filepath
-
 
   #dashboard provides an option to output the bounding boxes as simple text for copy/paste into Gnip dashboard.
   if $dashboard.nil? then
@@ -61,6 +122,9 @@ class BoundingBoxes
   else
     offset.long = $limit_long.to_f
   end
+  # end of appOptionParser class.
+
+
 
   #Determine the number of boxes to build.
   #How many columns needed to transverse West-East distance?
@@ -76,38 +140,43 @@ class BoundingBoxes
 
   #Initialize Origin bounding box
   #Create a point 'origin' object.
-  pt = OpenStruct.new
-  pt.west = sa.west
-  pt.east = sa.west + offset.long
-  pt.south = sa.south
-  pt.north = sa.south + offset.lat
+  box = OpenStruct.new
+  box.west = sa.west
+  box.east = sa.west + offset.long
+  box.south = sa.south
+  box.north = sa.south + offset.lat
 
   #Walk the study area building bounding boxes.
   # Starting in SW corner, marching east, then up a row and repeat.
-  while pt.south < sa.north #marching northward until next row would be completely out of study area.
-    while pt.west < sa.east  #marching eastward, building row of boxes
+  while box.south < sa.north #marching northward until next row would be completely out of study area.
+    while box.west < sa.east  #marching eastward, building row of boxes
 
       #Create bounding box. #bounding_box:[west_long south_lat east_long north_lat]
 
-      pt_temp = OpenStruct.new  #Create a new object, otherwise every boxes[] element points to current object.
-      pt_temp.west = pt.west
-      pt_temp.east = pt.east
-      pt_temp.south = pt.south
-      pt_temp.north = pt.north
-      boxes << pt_temp
+      box_temp = OpenStruct.new  #Create a new object, otherwise every boxes[] element points to current object.
+      box_temp.west = box.west
+      box_temp.east = box.east
+      box_temp.south = box.south
+      box_temp.north = box.north
+      boxes << box_temp
 
       #Advance eastward.
-      pt.west = (pt.west + offset.long).round(6)
-      pt.east = (pt.east + offset.lat).round(6)
+      box.west = (box.west + offset.long).round(6)
+      box.east = (box.east + offset.lat).round(6)
     end
 
     #Snap back to western edge.
-    pt.west = sa.west
-    pt.east = pt.west + offset.long
+    box.west = box.west
+
+    #Resize bounding box w.r.t. longitude offset...
+    offset.long = self.resizeBox(offset.long, box.west, box.south)  #TODO:
+
+    #Advance eastward, using new longitude offset.
+    box.east = box.west + offset.long
 
     #Advance northward.
-    pt.south = (pt.south + offset.lat).round(6)
-    pt.north = (pt.north + offset.lat).round(6)
+    box.south = (box.south + offset.lat).round(6)
+    box.north = (box.north + offset.lat).round(6)
   end
 
   p "Have " + boxes.count.to_s + " boxes."

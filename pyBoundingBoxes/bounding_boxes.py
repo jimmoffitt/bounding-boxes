@@ -104,7 +104,7 @@ import json
 
 
 '''
-   latlong paramaters are lat/long tuples, such as (40.749641,-73.99527).
+   longlat parameters are long/lat tuples, such as (-73.99527,40.749641).
 '''
 
 
