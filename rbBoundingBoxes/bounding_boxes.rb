@@ -30,18 +30,31 @@ class BoundingBoxes
   PI = 3.1415926535
   EARTH_RADIUS_METERS = 5282000
 
+  EARTH_CIRCUMFERENCE = 6378137     # earth circumference in meters
+  METERS_IN_MILE = 1609.34
+
+
   def self.deg2Rad(degree)
       degree * PI / 180
   end
 
   def self.great_circle_distance_miles(pt1, pt2)
-      lon1 = deg2Rad(pt1.west)
-      lat1 = deg2Rad(pt1.south)
-      lon2 = deg2Rad(pt2.west)
-      lat2 = deg2Rad(pt2.south)
 
-      2 * EARTH_RADIUS_METERS/1000 * asin(sqrt(sin((lat2-lat1)/2)**2 + cos(lat1) * cos(lat2) * sin((lon2 - lon1)/2)**2))
+
+      dlat = deg2Rad(pt2.south - pt1.south)
+      dlong = deg2Rad(pt2.west - pt1.west)
+
+      a = sin(dlat/2) * sin(dlat/2) +
+            cos(deg2Rad(pt1.south)) * cos(deg2Rad(pt2.south)) *
+          sin(dlong/2) * sin(dlong/2)
+      c = 2 * atan2(sqrt(a),sqrt(1-a))
+
+      d = EARTH_CIRCUMFERENCE * c
+
+      d / METERS_IN_MILE
+
   end
+
 
   def self.resizeBox(long_offset, west, south)
       point1 = OpenStruct.new
@@ -162,14 +175,15 @@ class BoundingBoxes
 
       #Advance eastward.
       box.west = (box.west + offset.long).round(6)
-      box.east = (box.east + offset.lat).round(6)
+      box.east = (box.east + offset.long).round(6)
     end
 
     #Snap back to western edge.
-    box.west = box.west
+    box.west = sa.west
 
     #Resize bounding box w.r.t. longitude offset...
     offset.long = self.resizeBox(offset.long, box.west, box.south)  #TODO:
+    #p offset.long
 
     #Advance eastward, using new longitude offset.
     box.east = box.west + offset.long
