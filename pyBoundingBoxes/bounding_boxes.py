@@ -54,14 +54,15 @@ dynamically size the bounding box longitude offset (width) and resize as it
 creates new rows.
 '''
 
-#TODO: 'Refactor' the Great Circle function to use as a 'auto-tune' box sizer...
-#       Probably only relevant for very large study areas, like continental scales.
 #TODO: Add error handling.  Particularly around file IO.
-#TODO: Assert that expected number of boxes matches the number generated.
 #TODO: Could add input validation for latitudes (N > S), not so much for longitude.
 #TODO: Add new logic to handle bounding boxes straddle the Antimeridian (where E180 becomes W180).
 #TODO: Adding more functionality?  Push that code out to external classes...
+#      Option to OR a specified number of bounding boxes into single rules
+#      Option to AND a specified rule group to each bounding box rule.
 #DONE:
+#Refactor the Great Circle function to use as a 'auto-tune' box sizer...
+#       Probably only relevant for very large study areas, like continental scales.
 #need to address the 'decimal precision' issue.
 #need to test in all hemispheres... Does this work in South America, Equator, Japan, and New Zealand?
 #Add real math to come up with better defaults for lat/long limits for bounding box size.
@@ -95,6 +96,8 @@ creates new rows.
    -w 127.686 -e 148.364 -n 46.232 -s 29.544 -f "../output/geo_japan.json"
    #Australia
    -w 112.5 -e 155.5 -n -10 -s -44.4 -f "../output/geo_australia.json"
+   #Kenya
+   -w 33.78 -e 42 -n 5.1 -s 4.8 -f "./kenya_geo.json"
 
 '''
 
