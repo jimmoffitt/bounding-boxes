@@ -23,6 +23,8 @@ require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slo
 '''
 #Colorado
 -w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado"
+#Kenya
+-w 33.78 -e 42 -n 5.1 -s 4.8 -f "./kenya_geo.json"
 '''
 
 class BoundingBoxes
@@ -68,13 +70,13 @@ class BoundingBoxes
       distance = great_circle_distance_miles(point1, point2)
       #p "distance: " + distance.to_s
 
-      if distance > 24.9 and distance <= 25.0 then
+      if distance > 24.8 and distance <= 24.9 then
           long_offset
       else
-         if distance < 24.9 then
+         if distance < 24.8 then
              long_offset = long_offset + 0.001
          end
-         if distance > 25.0 then
+         if distance > 24.9 then
              long_offset = long_offset - 0.001
          end
          resizeBox(long_offset, point1.west, point1.south)
