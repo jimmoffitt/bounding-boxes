@@ -142,13 +142,13 @@ def resizeBox(long_offset, long, lat):
     distance = great_circle_distance_miles(point1, point2)
     #print 'distance = ' + str(distance)
 
-    if distance > 24.9 and distance <=25.0:
+    if distance > 24.8 and distance <=24.9:
         #print 'Bingo with long_offset=' + str(long_offset)
         return long_offset
     else:
-        if distance < 24.9:
+        if distance < 24.8:
             long_offset = long_offset + 0.001
-        if distance > 25.0:
+        if distance > 24.9:
             long_offset = long_offset - 0.001
         #print 'Resizing again...'
         return resizeBox(long_offset,long, lat)
