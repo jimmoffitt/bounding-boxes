@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-
 '''
 A simple script to break-up a large rectangular geographic area into smaller 25-mile square bounding boxes.
     * All lat/longs are in decimal degrees.
@@ -13,7 +12,6 @@ A simple script to break-up a large rectangular geographic area into smaller 25-
 
 '''
 
-
 include Math
 require 'json'
 require 'optparse'
@@ -25,15 +23,20 @@ require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slo
 -w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado"
 #Kenya
 -w 33.78 -e 42 -n 5.1 -s 4.8 -f "./kenya_geo.json"
+
+#Customer example
+-w -74.679966 -e -71.688938  -n 41.271614 -s 40.33817 -f "./bounding_boxes.json"
 '''
 
 class BoundingBoxes
 
-  PI = 3.1415926535
+  PI = Math::PI
   EARTH_RADIUS_METERS = 5282000
 
   EARTH_CIRCUMFERENCE = 6378137     # earth circumference in meters
   METERS_IN_MILE = 1609.34
+
+  EARTH_RADIUS_MI = 3963.1900
 
 
   def self.deg2Rad(degree)
@@ -57,6 +60,26 @@ class BoundingBoxes
 
   end
 
+  def self.distance_in_mile(pt1, pt2)
+      return self.distance_in_radius(pt1,pt2) * EARTH_RADIUS_MI
+  end
+
+  def self.distance_in_radius(pt1, pt2)
+
+
+      dlat = deg2Rad(pt2.south - pt1.south)
+      dlong = deg2Rad(pt2.west - pt1.west)
+
+      a = sin(dlat/2)**2 +
+          cos(deg2Rad(pt1.south)) * cos(deg2Rad(pt2.south)) *
+              sin(dlong/2)**2
+      c = 2 * atan2(sqrt(a),sqrt(1-a))
+
+      return c
+  end
+
+
+
 
   def self.resizeBox(long_offset, west, south)
       point1 = OpenStruct.new
@@ -67,25 +90,27 @@ class BoundingBoxes
       point2.west = west + long_offset
       point2.south = south
 
-      distance = great_circle_distance_miles(point1, point2)
-      #p "distance: " + distance.to_s
+      #distance = great_circle_distance_miles(point1, point2)
+      distance = distance_in_mile(point1,point2)
+
+      p "distance: #{distance}"
 
       if distance > 24.8 and distance <= 24.9 then
           long_offset
       else
          if distance < 24.8 then
-             long_offset = long_offset + 0.001
+             long_offset = long_offset + 0.00001
          end
          if distance > 24.9 then
-             long_offset = long_offset - 0.001
+             long_offset = long_offset - 0.00001
          end
          resizeBox(long_offset, point1.west, point1.south)
       end
   end
 
   #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
-  lat_offset_default = 0.35
-  long_offset_default = 0.45
+  lat_offset_default = 0.34
+  long_offset_default = 0.42995
 
   #TODO: move to OptionParser class -------------------
   #Parse command-line and set variables.
@@ -139,8 +164,6 @@ class BoundingBoxes
   end
   # end of appOptionParser class.
 
-
-
   #Determine the number of boxes to build.
   #How many columns needed to transverse West-East distance?
   columns = (sa.west - sa.east).abs/offset.long
@@ -173,36 +196,48 @@ class BoundingBoxes
       box_temp.east = box.east
       box_temp.south = box.south
       box_temp.north = box.north
+
+      #Check if northern and eastern edges extend beyond study area and snap back if necessary.
+      if box_temp.north > sa.north then
+          box_temp.north = sa.north
+      end
+      if box_temp.east > sa.east then
+          box_temp.east = sa.east
+      end
+
       boxes << box_temp
 
       #Advance eastward.
-      box.west = (box.west + offset.long).round(6)
-      box.east = (box.east + offset.long).round(6)
+      box.west = (box.west + offset.long)
+      box.east = (box.east + offset.long)
     end
 
     #Snap back to western edge.
     box.west = sa.west
 
     #Resize bounding box w.r.t. longitude offset...
-    offset.long = self.resizeBox(offset.long, box.west, box.south)  #TODO:
-    #p offset.long
+    offset.long = self.resizeBox(offset.long, box.west, box.south)
 
     #Advance eastward, using new longitude offset.
     box.east = box.west + offset.long
 
     #Advance northward.
-    box.south = (box.south + offset.lat).round(6)
-    box.north = (box.north + offset.lat).round(6)
+    box.south = (box.south + offset.lat).round(8)
+    box.north = (box.north + offset.lat).round(8)
+
   end
 
-  p "Have " + boxes.count.to_s + " boxes."
+
 
   #Write output. Convert 'boxes' list top list of bounding_box rules
 
   if not dashboard then
     rules = []
     for box in boxes do
-      rule_syntax = 'bounding_box:[' + box.west.to_s + ' ' + box.south.to_s + ' ' + box.east.to_s + ' ' + box.north.to_s + ']'
+
+      #p "longitude coordinates: #{box.west}  #{box.east}"
+
+      rule_syntax = "bounding_box:[#{"%3.5f" % box.west} #{"%3.5f" % box.south} #{"%3.5f" % box.east} #{"%3.5f" % box.north}]"
       #p rule_syntax
       if tag == nil then
         rule = {'value' => rule_syntax}
@@ -223,7 +258,10 @@ class BoundingBoxes
   else
     contents = ""
     for box in boxes do
-      rule_syntax = 'bounding_box:[' + box.west.to_s + ' ' + box.south.to_s + ' ' + box.east.to_s + ' ' + box.north.to_s + ']'
+
+      p "longitude coordinates: #{box.west}  #{box.east}"
+
+      rule_syntax = "bounding_box:[#{"%3.5f" % box.west} #{"%3.5f" % box.south} #{"%3.5f" % box.east} #{"%3.5f" % box.north}]"
       contents = contents + rule_syntax + "\n"
     end
     File.open(filepath,'w') do |f|
