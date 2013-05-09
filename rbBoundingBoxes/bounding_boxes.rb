@@ -31,41 +31,18 @@ require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slo
 class BoundingBoxes
 
   PI = Math::PI
-  EARTH_RADIUS_METERS = 5282000
-
-  EARTH_CIRCUMFERENCE = 6378137     # earth circumference in meters
-  METERS_IN_MILE = 1609.34
-
   EARTH_RADIUS_MI = 3963.1900
-
 
   def self.deg2Rad(degree)
       degree * PI / 180
   end
 
-  def self.great_circle_distance_miles(pt1, pt2)
-
-
-      dlat = deg2Rad(pt2.south - pt1.south)
-      dlong = deg2Rad(pt2.west - pt1.west)
-
-      a = sin(dlat/2) * sin(dlat/2) +
-            cos(deg2Rad(pt1.south)) * cos(deg2Rad(pt2.south)) *
-          sin(dlong/2) * sin(dlong/2)
-      c = 2 * atan2(sqrt(a),sqrt(1-a))
-
-      d = EARTH_CIRCUMFERENCE * c
-
-      d / METERS_IN_MILE
-
-  end
 
   def self.distance_in_mile(pt1, pt2)
       return self.distance_in_radius(pt1,pt2) * EARTH_RADIUS_MI
   end
 
   def self.distance_in_radius(pt1, pt2)
-
 
       dlat = deg2Rad(pt2.south - pt1.south)
       dlong = deg2Rad(pt2.west - pt1.west)
@@ -77,9 +54,6 @@ class BoundingBoxes
 
       return c
   end
-
-
-
 
   def self.resizeBox(long_offset, west, south)
       point1 = OpenStruct.new
