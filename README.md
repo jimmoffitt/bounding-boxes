@@ -7,7 +7,6 @@ Simple scripts to break-up a large rectangular geographic area into smaller 25-m
    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.   
 
 Currently this script is available in Ruby and Python.  
-  
 
 Command-line options:
 
