@@ -20,7 +20,11 @@ require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slo
 
 '''
 #Colorado
--w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado"
+-w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado" -f "./colorado-boxes.json"
+
+#NW Colorado
+-w -106 -e -102 -n 41 -s 39 -t "geo-colorado-nw" -f "./colorado-nw-boxes.json"
+
 #Kenya
 -w 33.78 -e 42 -n 5.1 -s 4.8 -f "./kenya_geo.json"
 
@@ -64,10 +68,9 @@ class BoundingBoxes
       point2.west = west + long_offset
       point2.south = south
 
-      #distance = great_circle_distance_miles(point1, point2)
       distance = distance_in_mile(point1,point2)
 
-      p "distance: #{distance}"
+      #p "distance: #{distance}"
 
       if distance > 24.8 and distance <= 24.9 then
           long_offset
@@ -83,8 +86,8 @@ class BoundingBoxes
   end
 
   #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
-  lat_offset_default = 0.34
-  long_offset_default = 0.42995
+  lat_offset_default = 0.35
+  long_offset_default = 0.45
 
   #TODO: move to OptionParser class -------------------
   #Parse command-line and set variables.
@@ -95,7 +98,7 @@ class BoundingBoxes
     o.on('-s SOUTH') { |south| $south = south }
     o.on('-t TAG') { |tag| $tag = tag}
     o.on('-la LIMIT_LAT') { |limit_lat| $limit_lat = limit_lat}
-    o.on('-la LIMIT_LONG') { |limit_long| $limit_long = limit_long}
+    o.on('-lo LIMIT_LONG') { |limit_long| $limit_long = limit_long}
     o.on('-f FILEPATH') { |filepath| $filepath = filepath}
     o.on('-d') { $dashboard = true}
     o.on('-h') {puts o; exit}
