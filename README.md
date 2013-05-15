@@ -10,21 +10,21 @@ Currently this script is available in Ruby and Python.
 
 Command-line options:
 
-  -w  (--west)   West longitude in decimal degrees. 
-  -e  (--east)   East longitude in decimal degrees. 
-  -n  (--north)  North latitude in decimal degrees. 
-  -s' (--south)  South latitude in decimal degrees. 
+  * -w  (--west)   West longitude in decimal degrees. 
+  * -e  (--east)   East longitude in decimal degrees. 
+  * -n  (--north)  North latitude in decimal degrees. 
+  * -s' (--south)  South latitude in decimal degrees. 
   
- Optional:
-    -la (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
-    -lo'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
+Optional:
 
-    -t (--tag) The rule tag to apply to the generated bounding box rules. 
-    -f (--filepath) File name (and its path) for the JSON rules to get written to. If not provided a file named geo_rules.json is written to local directory.
+  * -la (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
+  * -lo'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
+
+  * -t (--tag) The rule tag to apply to the generated bounding box rules. 
+  * -f (--filepath) File name (and its path) for the JSON rules to get written to. If not provided a file named geo_rules.json is written to local directory.
     
-    -d (--dashboard) Instead of the Gnip JSON rules format, it produces a simple format for direct system entry using the Gnip Dashboard. Default filename is 				geo_rules.txt.  NOTE: Tags are not supported when using Dashboard.  
+  * -d (--dashboard) Instead of the Gnip JSON rules format, it produces a simple format for direct system entry using the Gnip Dashboard. Default filename is 				geo_rules.txt.  NOTE: Tags are not supported when using Dashboard.  
    
-
 
 These example command-line arguments:
 
