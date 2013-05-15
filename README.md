@@ -4,12 +4,28 @@ Simple scripts to break-up a large rectangular geographic area into smaller 25-m
    * All lat/longs are in decimal degrees.
    * Code starts with the southwest corner.  Marches east, then moves up a row and repeats.
    * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat]. 
-   * There is an option (-t) to specify a rule tag for the bounding boxes produced.
-   * There is an option (-f) to specify a filename and path for writing the file.  If no filename is specified,
-     it defaults to geo-rules.json.  	
-   * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.
+   * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.   
 
-Currently there are scripts written in Ruby and Python.  
+Currently this script is available in Ruby and Python.  
+  
+
+Command-line options:
+
+  -w  (--west)   West longitude in decimal degrees. 
+  -e  (--east)   East longitude in decimal degrees. 
+  -n  (--north)  North latitude in decimal degrees. 
+  -s' (--south)  South latitude in decimal degrees. 
+  
+ Optional:
+    -la (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
+    -lo'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
+
+    -t (--tag) The rule tag to apply to the generated bounding box rules. 
+    -f (--filepath) File name (and its path) for the JSON rules to get written to. If not provided a file named geo_rules.json is written to local directory.
+    
+    -d (--dashboard) Instead of the Gnip JSON rules format, it produces a simple format for direct system entry using the Gnip Dashboard. Default filename is 				geo_rules.txt.  NOTE: Tags are not supported when using Dashboard.  
+   
+
 
 These example command-line arguments:
 
