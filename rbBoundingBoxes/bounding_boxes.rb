@@ -85,10 +85,6 @@ class BoundingBoxes
       end
   end
 
-  #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
-  lat_offset_default = 0.35
-  long_offset_default = 0.45
-
   #TODO: move to OptionParser class -------------------
   #Parse command-line and set variables.
   OptionParser.new do |o|
@@ -126,6 +122,14 @@ class BoundingBoxes
   if filepath.nil? then
     filepath = 'geo_rules.json'
   end
+  
+  #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
+  lat_offset_default = 0.35
+  long_offset_default = 0.45
+  
+  if sa.north.abs < 15 OR sa.south.abs < 15 then 
+     long_offset_default = 0.35 
+  end     
 
   offset = OpenStruct.new
   if $limit_lat.nil? then
