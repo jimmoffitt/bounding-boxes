@@ -21,15 +21,10 @@ require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slo
 '''
 #Colorado
 -w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado" -f "./colorado-boxes.json"
-
 #NW Colorado
 -w -106 -e -102 -n 41 -s 39 -t "geo-colorado-nw" -f "./colorado-nw-boxes.json"
-
 #Kenya
 -w 33.78 -e 42 -n 5.1 -s 4.8 -f "./kenya_geo.json"
-
-#Customer example
--w -74.679966 -e -71.688938  -n 41.271614 -s 40.33817 -f "./bounding_boxes.json"
 '''
 
 class BoundingBoxes
@@ -85,9 +80,6 @@ class BoundingBoxes
       end
   end
 
-  #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
-  lat_offset_default = 0.35
-  long_offset_default = 0.45
 
   #TODO: move to OptionParser class -------------------
   #Parse command-line and set variables.
@@ -126,7 +118,15 @@ class BoundingBoxes
   if filepath.nil? then
     filepath = 'geo_rules.json'
   end
-
+  
+  #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
+  lat_offset_default = 0.35
+  long_offset_default = 0.45
+  
+  if sa.north.abs < 15 OR sa.south.abs < 15 then 
+     long_offset_default = 0.35 
+  end     
+  
   offset = OpenStruct.new
   if $limit_lat.nil? then
     offset.lat = lat_offset_default
