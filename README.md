@@ -8,6 +8,9 @@ Simple scripts to break-up a large rectangular geographic area into smaller 25-m
 
 Currently this script is available in Ruby and Python. The Python code represents an early design, while the Ruby code is more up to date.
 
+[]Recent Ruby updates
+    [] command-line details for over-riding default decimal degrees 25-mile boxes.
+    [] default longitude distance is a function of latitude. 
 
 
 Command-line options:
