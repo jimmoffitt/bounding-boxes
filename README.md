@@ -6,7 +6,9 @@ Simple scripts to break-up a large rectangular geographic area into smaller 25-m
    * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat]. 
    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.   
 
-Currently this script is available in Ruby and Python.  
+Currently this script is available in Ruby and Python. The Python code represents an early design, while the Ruby code is more up to date.
+
+
 
 Command-line options:
 
@@ -17,8 +19,8 @@ Command-line options:
   
 Optional:
 
-  * -la (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
-  * -lo'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
+  * -a (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
+  * -o'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
 
   * -t (--tag) The rule tag to apply to the generated bounding box rules. 
   * -f (--filepath) File name (and its path) for the JSON rules to get written to. If not provided a file named geo_rules.json is written to local directory.
