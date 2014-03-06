@@ -65,21 +65,34 @@ class BoundingBoxes
 
       distance = distance_in_mile(point1,point2)
 
-      #p "distance: #{distance}"
+      p "distance: #{distance}"
 
       if distance > 24.8 and distance <= 24.9 then
           long_offset
       else
-         if distance < 24.8 then
-             long_offset = long_offset + 0.00001
-         end
-         if distance > 24.9 then
-             long_offset = long_offset - 0.00001
-         end
-         resizeBox(long_offset, point1.west, point1.south)
+          if distance < 24.8 then
+              #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
+              if south.abs < 75 then
+                  long_offset = long_offset + 0.0001
+              elsif south.abs < 85 then
+                  long_offset = long_offset + 0.001
+              else
+                  long_offset = long_offset + 0.01
+              end
+          end
+          if distance > 24.9 then
+              #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
+              if south.abs < 75 then
+                  long_offset = long_offset - 0.0001
+              elsif south.abs < 85 then
+                  long_offset = long_offset - 0.001
+              else
+                  long_offset = long_offset - 0.01
+              end
+          end
+          resizeBox(long_offset, point1.west, point1.south)
       end
   end
-
 
   #TODO: move to OptionParser class -------------------
   #Parse command-line and set variables.
@@ -118,15 +131,21 @@ class BoundingBoxes
   if filepath.nil? then
     filepath = 'geo_rules.json'
   end
-  
+
   #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
   lat_offset_default = 0.35
   long_offset_default = 0.45
-  
-  if sa.north.abs < 15 OR sa.south.abs < 15 then 
-     long_offset_default = 0.35 
-  end     
-  
+
+  #Make smaller near the Equator.
+  if sa.north.abs < 15 or sa.south.abs < 15 then
+      long_offset_default = 0.35
+  end
+
+  #Make larger near the Poles.
+  if sa.north.abs > 80 or sa.south.abs > 80 then
+      long_offset_default = 3  #Purely an empirical number!
+  end
+
   offset = OpenStruct.new
   if $limit_lat.nil? then
     offset.lat = lat_offset_default
