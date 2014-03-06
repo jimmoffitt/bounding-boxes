@@ -140,16 +140,30 @@ def resizeBox(long_offset, long, lat):
     point2 = (long + long_offset, lat)
 
     distance = great_circle_distance_miles(point1, point2)
-    #print 'distance = ' + str(distance)
+    print 'distance = ' + str(distance) + ' with Lat = ' + str(lat)
 
     if distance > 24.8 and distance <=24.9:
         #print 'Bingo with long_offset=' + str(long_offset)
         return long_offset
     else:
         if distance < 24.8:
-            long_offset = long_offset + 0.001
+            #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
+            if math.fabs(lat) < 75:
+                long_offset = long_offset + 0.001
+            elif math.fabs(lat) < 85:
+                long_offset = long_offset + 0.005
+            else:
+                long_offset = long_offset + 0.007
+
         if distance > 24.9:
-            long_offset = long_offset - 0.001
+            #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
+            if math.fabs(lat) < 75:
+                long_offset = long_offset - 0.001
+            elif math.fabs(lat) < 85:
+                long_offset = long_offset - 0.005
+            else:
+                long_offset = long_offset - 0.007
+
         #print 'Resizing again...'
         return resizeBox(long_offset,long, lat)
 
@@ -163,6 +177,7 @@ if __name__ == "__main__":
             West: -125  East: -67.5     North: 49   South: 26
 
     '''
+
     #These default offsets are based on ~25 miles...   Well, in Continental USA.
     lat_offset_default = 0.35
     long_offset_default = 0.45
@@ -210,6 +225,14 @@ if __name__ == "__main__":
     long_east = args.east
     lat_north = args.north
     lat_south = args.south
+
+    #Make smaller near the Equator.
+    if math.fabs(lat_north) < 15 or math.fabs(lat_south) < 15:
+        long_offset_default = 0.35
+
+    #Make larger near the Poles.
+    if math.fabs(lat_north) > 80 or math.fabs(lat_south) > 80:
+        long_offset_default = 3  #Purely an empirical number!
 
     #Load latitude bounding box limit.
     if args.limit_lat == None:
