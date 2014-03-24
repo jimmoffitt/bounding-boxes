@@ -23,7 +23,7 @@ Command-line options:
 Optional:
 
   * -a (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
-  * -o'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
+  * -o (--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
 
   * -t (--tag) The rule tag to apply to the generated bounding box rules. 
   * -f (--filepath) File name (and its path) for the JSON rules to get written to. If not provided a file named geo_rules.json is written to local directory.
