@@ -36,7 +36,7 @@ These example command-line arguments:
 	-w -103.987 -e -102.734 -n 40.417 -s 39.900 -t "geo-rules" -f "./bounding-boxes.json"
 
 will produce this output:
-
+```
 {"rules":[
 	{"value":"bounding_box:[-103.98700 39.90000 -103.55705 40.24000]","tag":"geo-rules"},
 	{"value":"bounding_box:[-103.55705 39.90000 -103.12710 40.24000]","tag":"geo-rules"},
@@ -45,3 +45,4 @@ will produce this output:
 	{"value":"bounding_box:[-103.51965 40.24000 -103.05230 40.41700]","tag":"geo-rules"},
 	{"value":"bounding_box:[-103.05230 40.24000 -102.73400 40.41700]","tag":"geo-rules"}
 ]}
+```
