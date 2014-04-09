@@ -8,7 +8,7 @@ Simple scripts to break-up a large rectangular geographic area into smaller 25-m
 
 Currently this script is available in Ruby and Python. The Python code represents an early design, while the Ruby code is more up to date.
 
-* Recent Ruby updates
+* Recent updates
      * command-line details for over-riding default decimal degrees 25-mile boxes.
      * default longitude distance is a function of latitude. 
 
@@ -23,7 +23,7 @@ Command-line options:
 Optional:
 
   * -a (--limit_lat) Maximum bounding box decimal degree latitude size, must be <= 25 miles.  Defaults to 0.35 decimal degrees.
-  * -o'(--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
+  * -o (--limit_long) Maximum bounding box decimal degree longitude size, must be <= 25 miles. Defaults to 0.45 decimal degrees.
 
   * -t (--tag) The rule tag to apply to the generated bounding box rules. 
   * -f (--filepath) File name (and its path) for the JSON rules to get written to. If not provided a file named geo_rules.json is written to local directory.
@@ -36,7 +36,7 @@ These example command-line arguments:
 	-w -103.987 -e -102.734 -n 40.417 -s 39.900 -t "geo-rules" -f "./bounding-boxes.json"
 
 will produce this output:
-
+```
 {"rules":[
 	{"value":"bounding_box:[-103.98700 39.90000 -103.55705 40.24000]","tag":"geo-rules"},
 	{"value":"bounding_box:[-103.55705 39.90000 -103.12710 40.24000]","tag":"geo-rules"},
@@ -45,3 +45,4 @@ will produce this output:
 	{"value":"bounding_box:[-103.51965 40.24000 -103.05230 40.41700]","tag":"geo-rules"},
 	{"value":"bounding_box:[-103.05230 40.24000 -102.73400 40.41700]","tag":"geo-rules"}
 ]}
+```
