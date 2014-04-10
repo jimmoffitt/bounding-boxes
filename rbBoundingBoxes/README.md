@@ -34,9 +34,9 @@ The following parameters are used to specify the rule you are after:
     Rule construction details:
     -r  => Rule value element that is concatenated with produced bounding box clauses.
     -t  => Rule tag applied to all generated rules.    
-    -m  => Limit generated rule length to allow other rule elements to be added at a later time. 
-    -p  => Generate profile_bounding_box rule clauses. 
-    -b  => Generate bounding_box rule clauses (default if neither specified).
+    -b  => Number of characters for a buffer to allow other rule elements to be added at a later time. 
+    -p  => Generate profile_bounding_box rule clauses for Gnip Profile Geo enrichment. 
+    -g  => Generate bounding_box rule clauses for geo-tagged tweets (default if neither specified).
     
     Output options:
     -f  => File name to write rules to (defaults to geo-rules.json).
@@ -113,7 +113,7 @@ Note that the code will take the passed in file name and update it to *.txt.  So
 
 
 
-####Maximum characters for generated rules
+####Reserve a buffer for other rule elements.
 
 The maximum length of the bounding_box element can be specified by using the '-m ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule elements.  It can also be used to affect how many bounding_box claused get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the maximum length of the genereated rules to 100 characaters:
 
