@@ -68,9 +68,14 @@ This would produce a 'geo_rules.json' file with the following contents:
 
 #### JSON output
 
-By default rules will be written in JSON, as used by the Gnip Rules API.
+By default rules will be written in JSON, as used by the Gnip Rules API. 
 
+```
 -w -105.45 -e -104.56 -n 40.58 -s 39.9 -b -t "geo-frontrange" -r "flood OR storm OR rain" -f "geo-frontrange.json" 
+```
+
+
+
 ```
 {
   "rules": [
