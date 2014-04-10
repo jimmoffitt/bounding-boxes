@@ -114,9 +114,9 @@ class BoundingBoxes
         o.on('-s SOUTH') { |south| $south = south }
         o.on('-r RULE') { |rule| $rule_base = rule }
         o.on('-t TAG') { |tag| $tag = tag }
-        o.on('-m MAX') { |max| $max = max }
+        o.on('-b BUFFER') { |buffer| $buffer = buffer }
         o.on('-p') { $profile_geo = true }
-        o.on('-b') { $tweet_geo = true }
+        o.on('-g') { $tweet_geo = true }
         o.on('-a LIMIT_LAT') { |limit_lat| $limit_lat = limit_lat }
         o.on('-o LIMIT_LONG') { |limit_long| $limit_long = limit_long }
         o.on('-f FILEPATH') { |filepath| $filepath = filepath }
@@ -141,10 +141,10 @@ class BoundingBoxes
         end
     end
 
-    if $max.nil? then
-        maximum_length = MAX_RULE_LENGTH
+    if $buffer.nil? then
+        buffer_length = 0
     else
-        maximum_length = $max.to_i
+        buffer_length = $buffer.to_i
     end
 
     if $profile_geo.nil? then
@@ -159,7 +159,15 @@ class BoundingBoxes
         tweet_geo = true
     end
 
+    if $profile_geo.nil? and $tweet_geo.nil? then
+        tweet_geo = true #Default
+    end
+
     filepath = $filepath
+
+    if filepath.nil? then
+        filepath = 'geo_rules.json'
+    end
 
     #dashboard provides an option to output the bounding boxes as simple text for copy/paste into Gnip dashboard.
     if $dashboard.nil? then
@@ -175,9 +183,6 @@ class BoundingBoxes
         end
     end
 
-    if filepath.nil? then
-        filepath = 'geo_rules.json'
-    end
 
     #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
     lat_offset_default = 0.35
@@ -294,16 +299,14 @@ class BoundingBoxes
 
     #At this point we should OR these rules together.
     #The limits here are:
-    #    maximum length of rule, or user-specified if provided
+    #    maximum length of rule, maximum PT length (set constant) minus user-specified buffer.
     #    length of 'add-on' rule clause
-    #    maximum number of positive clauses
+    #    maximum number of positive clauses #TODO
 
     starting_buffer = MAX_RULE_LENGTH
 
-    #TODO: if maximum_length #so we have already allocated for static, user-specified buffer.
-
-    if !maximum_length.nil? then
-        starting_buffer = maximum_length
+    if !buffer_length.nil? then
+        starting_buffer = MAX_RULE_LENGTH - buffer_length
     end
 
     #Do we have have a user-specified rule element to add on?
@@ -341,19 +344,26 @@ class BoundingBoxes
 
             if i == num_of_clauses then
                 rule = "#{rule})"
-                rules << rule
+                rules << rule.strip!
             end
         else
+
+            if i == 1 then #We have too big of a buffer, so readjust and add rule
+                rule = "#{rule_base} (#{clause}"
+                empty_rule = false
+                current_buffer = rule.length + 5
+            end
+
             #We are done here, so add this rule to the rules array...
             rule = "#{rule})"
-            rules << rule
+            rules << rule.strip!
 
             #handle the clause that would have pushed us over the edge.
             rule = "#{rule_base} (#{clause}"
 
             if i == num_of_clauses then
                 rule = "#{rule})"
-                rules << rule
+                rules << rule.strip!
             end
 
             #and initialize things.
