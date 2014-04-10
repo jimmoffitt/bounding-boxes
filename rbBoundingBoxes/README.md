@@ -15,27 +15,33 @@ as Coloroado.
 + Enables a character buffer to be specified so space can be reserved for future rule elements.
 
 
-###Options
 
--w WEST
-    -e EAST
-    -n NORTH
-    -s SOUTH
-    -r RULE
-    -t TAG
-    -m MAX
-    -p
-    -b
-    -a LIMIT_LAT
-    -o LIMIT_LONG
-    -f FILEPATH
-    -d
-    -h
++ All lat/long coordinates are in decimal degrees.
++ 'Study area' refers to the area you want to generate (25-mile) bounding boxes for.
 
+###Usage
 
+The following parameters are used to specify the rule you are after:
 
-
-
+    Study area coordinates in decimal degrees (required):
+    -w  => Western longitude.
+    -e  => Eastern longitude. 
+    -n  => North latitude.
+    -s  => South latitude.
+    
+    
+    Rule construction details:
+    -r  => Rule value element that is concatenated with produced bounding box clauses.
+    -t  => Rule tag applied to all generated rules.    
+    -m  => Limit generated rule length to allow other rule elements to be added at a later time. 
+    -p  => Generate profile_bounding_box rule clauses. 
+    -b  => Generate bounding_box rule clauses.
+    
+    Output options:
+    -f  => File name to write rules to. (defaults to geo-rules.json)
+    -d  => Write rules as simple text for copying/pasting into console.gnip.com Rules user-interface.
+    
+    -h => Show parameter documentaton.
 
 
 #### Dashboard output
