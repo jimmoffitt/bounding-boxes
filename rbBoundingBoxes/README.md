@@ -45,6 +45,25 @@ The following parameters are used to specify the rule you are after:
     -h => Show parameter documentaton.
 ```
 
+
+The most basic call would look like:
+```
+ruby bounding_boxes.rb -w -105.45 -e -104.56 -n 40.58 -s 39.9 
+```
+
+This would produce a 'geo_rules.json' file with the following contents:
+
+```
+{
+  "rules": [
+    {
+      "value": " (bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])"
+    }
+  ]
+}
+```
+
+
 ###Output Options
 
 #### JSON output
