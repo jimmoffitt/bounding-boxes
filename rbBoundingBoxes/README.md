@@ -8,16 +8,18 @@ A simple script for producing Gnip bounding boxes for a study area.  Gnip boundi
 25-mile per 'side' limit.  So the script is used to produce 25-mile bounding boxes for a large area such
 as Coloroado.
 
-
+####Features
 + Supports Gnip Profile Geo profile_bounding_box Operator.
 + Enables a business rules 'element' that can be ANDed with produced geo rules.
 + ORs together bounding box up to 1024 characters. These rules written in an atomic nature with surrounding parentheses.
 + Enables a character buffer to be specified so space can be reserved for future rule elements.
 
 
-
+####Other details
 + All lat/long coordinates are in decimal degrees.
-+ 'Study area' refers to the area you want to generate (25-mile) bounding boxes for.
++ "Study area" refers to the area you want to generate (25-mile) bounding boxes for.
++ "Rule element" refers to a set of rule operators.  Rules we are addressing here typically have a 'business logic' element and a 'geographical' element.  
+
 
 ###Usage
 
@@ -44,7 +46,9 @@ The following parameters are used to specify the rule you are after:
     -h => Show parameter documentaton.
 
 
-#### Dashboard output
+#### JSON output
+
+By default rules will be written in JSON, as used by the Gnip Rules API.
 
 -w -105.45 -e -104.56 -n 40.58 -s 39.9 -b -t "geo-frontrange" -r "flood OR storm OR rain" -f "geo-frontrange.json" 
 ```
@@ -58,12 +62,13 @@ The following parameters are used to specify the rule you are after:
 }
 ```
 
-
 #### Dashboard output
 
--w -105.45 -e -104.56 -n 40.58 -s 39.9 -b -t "geo-frontrange" -r "flood OR storm OR rain" -f "geo-frontrange.json" -d
+By specifying that you want to enter rules by using the console.gnip dashboard, a simple text file will be producted whose contents can easily be copied/pasted into the console. This is indicated by including the '-d' (dashboard) parameter. 
 
-Since we added the "-d" parameter, a simple text file will be producted whose contents can easily be copied/pasted into the console. Note that the code will take the passed in file name and update it to *.txt.  So the resulting file is named geo-frontrange.txt and has these contents: 
+Note that the code will take the passed in file name and update it to *.txt.  So the resulting file is named geo-frontrange.txt and has these contents: 
+
+-w -105.45 -e -104.56 -n 40.58 -s 39.9 -b -t "geo-frontrange" -r "flood OR storm OR rain" -f "geo-frontrange.json" -d
 
 ```
 (flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])
