@@ -68,37 +68,20 @@ This would produce a 'geo_rules.json' file with the following contents:
 
 #### JSON output
 
-By default rules will be written in JSON, as used by the Gnip Rules API. 
-
-```
--w -105.45 -e -104.56 -n 40.58 -s 39.9 -b -t "geo-frontrange" -r "flood OR storm OR rain" -f "geo-frontrange.json" 
-```
-
-
-
-```
-{
-  "rules": [
-    {
-      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])",
-      "tag": "geo-frontrange"
-    }
-  ]
-}
-```
+By default rules will be written in JSON, as used by the Gnip Rules API. The default file name is geo-rules.json and that can be overridden with the '-f' parameter.  The output above provides an example of the JSON output.  
 
 #### Dashboard output
 
 By specifying that you want to enter rules by using the console.gnip dashboard, a simple text file will be producted whose contents can easily be copied/pasted into the console. This is indicated by including the '-d' (dashboard) parameter. 
 
 ```
--w -105.45 -e -104.56 -n 40.58 -s 39.9 -b -t "geo-frontrange" -r "flood OR storm OR rain" -f "geo-frontrange.json" -d
+-w -105.45 -e -104.56 -n 40.58 -s 39.9 -d
 ```
 
 Note that the code will take the passed in file name and update it to *.txt.  So the resulting file is named geo-frontrange.txt and has these contents: 
 
 ```
-(flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])
+(bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])
 
 ```
 
