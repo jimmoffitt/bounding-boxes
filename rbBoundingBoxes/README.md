@@ -10,10 +10,13 @@ as Coloroado.
 
 ####Features
 + Supports Gnip Profile Geo profile_bounding_box Operator.
-+ Enables a business rules 'element' that can be ANDed with produced geo rules.
+     + '-g' for Twitter geo-tagged bounding boxes.
+     + '-p' for Gnip Profile Geo bounding boxes.
++ Enables a business rule 'clauses' that can be ANDed with produced geo rules.
+     + -r "weather OR snow OR rain OR contains:flood"
 + ORs together bounding box up to 1024 characters. These rules written in an atomic nature with surrounding parentheses.
-+ Enables a character buffer to be specified so space can be reserved for future rule elements.
-
++ Enables a character buffer to be specified so space can be reserved for future rule clauses.
+     + -b 200    
 
 ####Other details
 + All lat/long coordinates are in decimal degrees.
