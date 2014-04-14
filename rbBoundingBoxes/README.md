@@ -96,9 +96,9 @@ Note that the code will take the passed in file name and update it to *.txt.  So
 
 
 
-####Reserve a buffer for other rule elements.
+####Reserve a buffer for other rule clauses.
 
-The maximum length of the bounding_box element can be specified by using the '-m ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule elements.  It can also be used to affect how many bounding_box claused get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the maximum length of the genereated rules to 100 characaters:
+The maximum length of the bounding_box clauses can be specified by using the '-m ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule clauses.  It can also be used to affect how many bounding_box claused get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the maximum length of the genereated rules to 100 characaters:
 
 -m 100
 
