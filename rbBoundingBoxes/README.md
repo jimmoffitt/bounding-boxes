@@ -130,10 +130,10 @@ Produces:
 
 ####Reserve a buffer for other rule clauses.
 
-The maximum length of the bounding_box clauses can be specified by using the '-m ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule clauses.  It can also be used to affect how many bounding_box claused get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the maximum length of the genereated rules to 100 characaters:
+You can reserve a 'character buffer' in the generated rules by using the '-b ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule clauses.  It can also be used to affect how many bounding_box clauses get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the reserved character buffer to 900:
 
 ```
-bounding_boxes.rb -w -105.45 -e -104.56 -n 40.58 -s 39.9 -g -m 100
+bounding_boxes.rb -w -105.45 -e -104.56 -n 40.58 -s 39.9 -g -r "flood OR storm OR rain" -b 900
 ```
 
 Produces:
