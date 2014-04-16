@@ -126,6 +126,26 @@ Produces:
 
 ####Concatenating other rule elements to generated geographic rule element 
 
+Additional rule clauses can be added on to the generated rules by using the '-r' option. This option enables you to add on other non-geographic rules clauses. If you do not provide opening and closing parentheses they are automatically added and these clauses are ANDed to the geographic clauses.
+
+In the following example, the rule clauses "flood OR storm OR rain" are specified with the '-r' option:
+
+```
+bounding_boxes.rb -w -105.45 -e -104.56 -n 40.58 -s 39.9 -r "flood OR storm OR rain"
+```
+
+Produces:
+
+```
+{
+  "rules": [
+    {
+      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])"
+    }
+  ]
+}
+
+```
 
 
 ####Reserve a buffer for other rule clauses.
@@ -142,24 +162,18 @@ Produces:
 {
   "rules": [
     {
-      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000])",
-      "tag": "geo-frontrange"
+      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000])"
     },
     {
-      "value": "(flood OR storm OR rain) (bounding_box:[-105.00000 39.90000 -104.56000 40.25000])",
-      "tag": "geo-frontrange"
+      "value": "(flood OR storm OR rain) (bounding_box:[-105.00000 39.90000 -104.56000 40.25000])"
     },
     {
-      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 40.25000 -104.98260 40.58000])",
-      "tag": "geo-frontrange"
+      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 40.25000 -104.98260 40.58000])"
     },
     {
-      "value": "(flood OR storm OR rain) (bounding_box:[-104.98260 40.25000 -104.56000 40.58000])",
-      "tag": "geo-frontrange"
+      "value": "(flood OR storm OR rain) (bounding_box:[-104.98260 40.25000 -104.56000 40.58000])"
     }
   ]
 }
 ```
-
-
 
