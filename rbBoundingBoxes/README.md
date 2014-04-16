@@ -26,7 +26,7 @@ as Coloroado.
 
 ###Usage
 
-The following parameters are used to specify the rule you are after:
+The following parameters are used to specify the rules to be generated:
 ```
     Study area coordinates in decimal degrees (required):
     -w  => Western longitude.
@@ -88,9 +88,7 @@ Note that the code will take the passed in file name and update it to *.txt.  So
 
 ```
 
-
-
-###Command-line examples:
+###Command-line examples
 
 ####Generating bounding_box: and/or profile_bounding_box: rule clauses
 
@@ -123,7 +121,6 @@ Produces:
 
 ```
 
-
 ####Concatenating other rule elements to generated geographic rule element 
 
 Additional rule clauses can be added on to the generated rules by using the '-r' option. This option enables you to add on other non-geographic rules clauses. If you do not provide opening and closing parentheses they are automatically added and these clauses are ANDed to the geographic clauses.
@@ -148,7 +145,7 @@ Produces:
 ```
 
 
-####Reserve a buffer for other rule clauses.
+####Reserve a buffer for other rule clauses
 
 You can reserve a 'character buffer' in the generated rules by using the '-b ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule clauses.  It can also be used to affect how many bounding_box clauses get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the reserved character buffer to 900:
 
@@ -176,4 +173,39 @@ Produces:
   ]
 }
 ```
+
+####Adding tags to generated rules
+
+Rule tags are useful for segregating rules into multiple sets. Rule tags come in handy when developing multiple sets of geographic rules for different areas.  The following command-line sets the rule tag to 'geo_front_range': 
+
+```
+bounding_boxes.rb -w -105.45 -e -104.56 -n 40.58 -s 39.9 -g -r "flood OR storm OR rain" -t "geo_front_range"
+```
+
+Produces:
+
+```
+{
+  "rules": [
+    {
+      "value": "(flood OR storm OR rain) (bounding_box:[-105.45000 39.90000 -105.00000 40.25000] OR bounding_box:[-105.00000 39.90000 -104.56000 40.25000] OR bounding_box:[-105.45000 40.25000 -104.98260 40.58000] OR bounding_box:[-104.98260 40.25000 -104.56000 40.58000])",
+      "tag": "geo_front_range"
+    }
+  ]
+}
+```
+
+Here is an example set of command-lines for generating separate sets of bounding_box and profile_bounding_box rules for different areas:
+
+```
+bounding_boxes.rb -w -87.8 -e -87.4 -n 42.0 -s 41.6 -g -p -r "flood OR storm OR rain" -t "geo_chicago"
+bounding_boxes.rb -w -118.4 -e -118.0 -n 34.2 -s 33.8 -g -p -r "flood OR storm OR rain" -t "geo_los_angeles"
+bounding_boxes.rb -w -71.2 -e -70.8 -n 42.5 -s 42.1 -g -p -r "flood OR storm OR rain" -t "geo_boston"
+
+```
+
+
+
+
+
 
