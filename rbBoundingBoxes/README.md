@@ -1,6 +1,6 @@
 ##bounding-boxes (Ruby version)
 
-A Ruby script for building bounding boxes.
+A Ruby script for building bounding boxes. (Note that there is also a Python version for the initial prototype, more information [HERE] (https://github.com/jimmoffitt/bounding-boxes/tree/master/pyBoundingBoxes)).
 
 ###Introduction
 
