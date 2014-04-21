@@ -12,7 +12,7 @@ as Coloroado.
 + Supports Gnip Profile Geo profile_bounding_box Operator.
      + '-g' for Twitter geo-tagged bounding boxes.
      + '-p' for Gnip Profile Geo bounding boxes.
-+ Enables a business rule 'clauses' that can be ANDed with produced geo rules.
++ Enables business rule 'clauses' that can be ANDed with produced geo rules.
      + -r "weather OR snow OR rain OR contains:flood"
 + ORs together bounding box up to 1024 characters. These rules written in an atomic nature with surrounding parentheses.
 + Enables a character buffer to be specified so space can be reserved for future rule clauses.
