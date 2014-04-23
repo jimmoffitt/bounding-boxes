@@ -1,27 +1,21 @@
 #!/usr/bin/env ruby
 
 '''
-A simple class to break-up a large rectangular geographic area into smaller 25-mile square bounding boxes.
-Generates both bounding_box and profile_bounding_box rules.
-    * All lat/longs are in decimal degrees.
-    * Code starts with the southwest corner.  Marches east, then moves up a row and repeats.
-    * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat].
-    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.
+A simple optparse wrapper around the geo_rule_builder.
+Processes the command-line and calls GeoRuleBuiler.do_all. That is it.
 '''
-
 
 require 'optparse'
 require_relative './geo_rule_builder'
 
-
-'' '
+'''
 #Colorado
 -w -109 -e -102 -n 41 -s 37 -t "Geo-Colorado" -f "./colorado-boxes.json"
 #NW Colorado
 -w -106 -e -102 -n 41 -s 39 -t "geo-colorado-nw" -f "./colorado-nw-boxes.json"
 #Kenya
 -w 33.78 -e 42 -n 5.1 -s 4.8 -f "./kenya_geo.json"
-' ''
+'''
 
 class BoundingBoxes
 
