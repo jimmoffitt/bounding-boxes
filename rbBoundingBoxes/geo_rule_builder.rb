@@ -307,8 +307,6 @@ class GeoRuleBuilder
 
     def write_rules(rules = nil)
 
-        rules = @rules unless !rules.nil?
-
         if not dashboard then
 
             rule_set = Array.new
@@ -332,6 +330,11 @@ class GeoRuleBuilder
             end
 
         else #Writing a non-JSON file for copying/pasting into Dashboard rules text box.
+
+            if @file_path.include?(".json") then
+                @file_path["json"] = "txt"
+            end
+
             contents = ""
             for rule in rules do
                 contents = contents + rule + "\n"
