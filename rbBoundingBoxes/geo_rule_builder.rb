@@ -59,7 +59,7 @@ class GeoRuleBuilder
         @south = south
     end
 
-    def resizeBox(long_offset, west, south)
+    def resize_box(long_offset, west, south)
         point1 = OpenStruct.new
         point2 = OpenStruct.new
 
@@ -95,7 +95,7 @@ class GeoRuleBuilder
                     long_offset = long_offset - 0.01
                 end
             end
-            resizeBox(long_offset, point1.west, point1.south)
+            resize_box(long_offset, point1.west, point1.south)
         end
     end
 
@@ -187,7 +187,7 @@ class GeoRuleBuilder
             box.west = sa.west
 
             #Resize bounding box w.r.t. longitude offset...
-            offset.long = resizeBox(offset.long, box.west, box.south)
+            offset.long = resize_box(offset.long, box.west, box.south)
 
             #Advance eastward, using new longitude offset.
             box.east = box.west + offset.long
