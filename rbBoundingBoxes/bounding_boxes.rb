@@ -35,7 +35,7 @@ class BoundingBoxes
         o.on('-g') { grb.tweet_geo = true }
         o.on('-a LIMIT_LAT') { |limit_lat| grb.imit_lat = limit_lat }
         o.on('-o LIMIT_LONG') { |limit_long| grb.limit_long = limit_long }
-        o.on('-f FILEPATH') { |filepath| grb.file_path = filepath }
+        o.on('-f FILEPATH') { |filepath| grb.filepath = filepath }
         o.on('-d') { grb.dashboard = true }
         o.on('-h') { puts o; exit }
         o.parse!
@@ -58,7 +58,7 @@ class BoundingBoxes
     end
 
     if grb.profile_geo.nil? and grb.tweet_geo.nil? then
-        tweet_geo = true #Default
+        grb.tweet_geo = true #Default
     end
 
     if grb.profile_geo.nil? then
@@ -82,6 +82,13 @@ class BoundingBoxes
         grb.dashboard = false
     else
         grb.dashboard = true
+        if grb.file_path.nil? then
+            grb.file_path = 'geo_rules.txt'
+        else #just make sure it is a txt extension.
+            if grb.file_path.include?(".json") then
+                grb.file_path["json"] = "txt"
+            end
+        end
     end
 
     #OK, go generate the rules.

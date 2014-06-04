@@ -1,26 +1,6 @@
-'''
-A simple class to break-up a large rectangular geographic area into smaller 25-mile square bounding boxes.
-Generates both bounding_box and profile_bounding_box rules.
-    * All lat/longs are in decimal degrees.
-    * Code starts with the southwest corner.  Marches east, then moves up a row and repeats.
-    * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat].
-    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.
-
-    See bounding_box.rb for a "optparse" wrapper around this class.
-
-    Example usage:
-
-        grb = GeoRuleBuilder.new
-        grb.setStudyArea(-105,-102,41,37)
-        grb.boxes = grb.build_boxes
-        grb.clauses = grb.build_geo_clauses
-        grb.rules = grb.build_rules
-        grb.write_rules
-
-'''
-
 require 'json'
-require 'ostruct' # Like a (Python) tuple sort of hash.  Slower performance than a plain 'o Struct, but a handy 'on the fly' data structure.
+require 'ostruct' #Playing with OpenStructs, a (Python) tuple sort of hash.  Slower performance
+                 #than a plain o Struct, but a handy 'on the fly' data structure.
 
 require_relative './gnip_globe'
 
@@ -42,24 +22,22 @@ class GeoRuleBuilder
                   :rules  #Array of rules, combinations of clauses.
 
     def initialize
-        @boxes = Array.new
-        @clauses = Array.new
+
+        @boxes = Array.new  #Create an array to hold boxes.
+        @clauses = Array.new  #Create bounding box Operators and store into Operators array.
         @rules = Array.new
 
         #Set defaults.
         @file_path = 'geo_rules.json'
+
+        #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
         @lat_offset_default = 0.35
-        @long_offset_default = 0.45
+        @long_offset_default = 0.40
+
     end
 
-    def set_study_area(west, east, north, south)
-        @west = west
-        @east = east
-        @north = north
-        @south = south
-    end
 
-    def resize_box(long_offset, west, south)
+    def resizeBox(long_offset, west, south)
         point1 = OpenStruct.new
         point2 = OpenStruct.new
 
@@ -72,10 +50,10 @@ class GeoRuleBuilder
 
         p "distance: #{distance}"
 
-        if distance > 24.8 and distance <= 24.9 then
+        if distance > 23.0 and distance <= 23.5 then
             long_offset
         else
-            if distance < 24.8 then
+            if distance < 23.0 then
                 #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
                 if south.abs < 75 then
                     long_offset = long_offset + 0.0001
@@ -85,7 +63,7 @@ class GeoRuleBuilder
                     long_offset = long_offset + 0.01
                 end
             end
-            if distance > 24.9 then
+            if distance > 23.5 then
                 #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
                 if south.abs < 75 then
                     long_offset = long_offset - 0.0001
@@ -95,16 +73,55 @@ class GeoRuleBuilder
                     long_offset = long_offset - 0.01
                 end
             end
-            resize_box(long_offset, point1.west, point1.south)
+            resizeBox(long_offset, point1.west, point1.south)
         end
     end
 
-    def build_boxes(west=nil, east=nil, north=nil, south=nil)
 
-        west = @west unless !west.nil?
-        east = @east unless !east.nil?
-        north = @north unless !north.nil?
-        south = @south unless !south.nil?
+
+
+    def write_rules(rules)
+
+       #------------------------------------------------------------------
+       #Write output. Convert 'boxes' list top list of bounding_box rules
+       if not dashboard then
+
+           rule_set = Array.new
+
+           for rule in rules do
+               #Build JSON version
+               if tag == nil then
+                   this_rule = {'value' => rule}
+               else
+                   this_rule = {'value' => rule, 'tag' => tag}
+               end
+
+               rule_set << this_rule
+           end
+
+           rule_final = Hash.new
+           rule_final['rules'] = rule_set
+
+           File.open(@file_path, 'w') do |f|
+               f.write(rule_final.to_json)
+           end
+
+           #p rule_set.to_json
+       else #Writing a non-JSON file for copying/pasting into Dashboard rules text box.
+           contents = ""
+           for rule in rules do
+               contents = contents + rule + "\n"
+           end
+
+           File.open(@file_path, 'w') do |f|
+               f.write(contents)
+           end
+       end
+
+    end
+
+
+    def build_boxes(west, east, north, south)
 
         boxes = Array.new
 
@@ -187,7 +204,7 @@ class GeoRuleBuilder
             box.west = sa.west
 
             #Resize bounding box w.r.t. longitude offset...
-            offset.long = resize_box(offset.long, box.west, box.south)
+            offset.long = resizeBox(offset.long, box.west, box.south)
 
             #Advance eastward, using new longitude offset.
             box.east = box.west + offset.long
@@ -198,13 +215,10 @@ class GeoRuleBuilder
 
         end
 
-        @boxes = boxes
+        return boxes
     end
 
-    def build_geo_clauses(boxes=nil)
-
-        boxes = @boxes unless !boxes.nil?
-
+    def build_geo_clauses(boxes)
         clause = ''
         clauses = Array.new
 
@@ -222,13 +236,10 @@ class GeoRuleBuilder
             end
         end
 
-        @clauses = clauses
-
+        return clauses
     end
 
-    def build_rules(clauses=nil)
-
-        clauses = @clauses unless !clauses.nil?
+    def build_rules(clauses)
 
         rules = Array.new
 
@@ -249,7 +260,9 @@ class GeoRuleBuilder
         #Do we have have a user-specified rule element to add on?
         starting_buffer = starting_buffer - @rule_base.length
 
-        starting_buffer = starting_buffer - 3 #the 3 is allocated for surrounding parentheses.
+        #if there is a user-specified buffer or a rule clause passed in allocate 3 characters for () and space between elements.
+        #TODO: implement above IF statements
+        starting_buffer = starting_buffer - 3 #the 3 is allocated for surrounding para
 
         empty_rule = true
 
@@ -302,50 +315,9 @@ class GeoRuleBuilder
             end
         end
 
-        @rules = rules
+        return rules
     end
 
-    def write_rules(rules = nil)
-
-        if not dashboard then
-
-            rule_set = Array.new
-
-            for rule in rules do
-                #Build JSON version
-                if tag == nil then
-                    this_rule = {'value' => rule}
-                else
-                    this_rule = {'value' => rule, 'tag' => tag}
-                end
-
-                rule_set << this_rule
-            end
-
-            rule_final = Hash.new
-            rule_final['rules'] = rule_set
-
-            File.open(@file_path, 'w') do |f|
-                f.write(rule_final.to_json)
-            end
-
-        else #Writing a non-JSON file for copying/pasting into Dashboard rules text box.
-
-            if @file_path.include?(".json") then
-                @file_path["json"] = "txt"
-            end
-
-            contents = ""
-            for rule in rules do
-                contents = contents + rule + "\n"
-            end
-
-            File.open(@file_path, 'w') do |f|
-                f.write(contents)
-            end
-        end
-
-    end
 
     def do_all
         @boxes = build_boxes(@west, @east, @north, @south)
@@ -353,5 +325,6 @@ class GeoRuleBuilder
         @rules = build_rules(@clauses)
         write_rules(@rules)
     end
+
 
 end
