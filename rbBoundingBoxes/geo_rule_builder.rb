@@ -31,8 +31,8 @@ class GeoRuleBuilder
         @file_path = 'geo_rules.json'
 
         #Set defaults.  Most appropriate for mid-latitudes.  Tested with Continental US area...
-        @lat_offset_default = 0.35
-        @long_offset_default = 0.40
+        @lat_offset_default = 0.3
+        @long_offset_default = 0.35
 
     end
 
@@ -48,12 +48,18 @@ class GeoRuleBuilder
 
         distance = GnipGlobe.distance_in_mile(point1, point2)
 
-        p "distance: #{distance}"
+        #p "distance: #{distance}"
 
-        if distance > 23.0 and distance <= 23.5 then
+        #If you are getting boxes exceeding the 25 mile limit (via rule invalidation), you can lower these bounds.
+        distance_min = 24 # 19  #22.5 23
+        distance_max = 24.9 # 21  #23, 23.5
+
+
+        #if distance > 23.0 and distance <= 23.5 then
+        if distance > distance_min and distance <= distance_max then
             long_offset
         else
-            if distance < 23.0 then
+            if distance < distance_min then
                 #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
                 if south.abs < 75 then
                     long_offset = long_offset + 0.0001
@@ -63,7 +69,8 @@ class GeoRuleBuilder
                     long_offset = long_offset + 0.01
                 end
             end
-            if distance > 23.5 then
+
+            if distance > distance_max then
                 #These latitude driven tweaks are 100% empirical for handle boxes near the Poles.
                 if south.abs < 75 then
                     long_offset = long_offset - 0.0001
@@ -76,9 +83,6 @@ class GeoRuleBuilder
             resizeBox(long_offset, point1.west, point1.south)
         end
     end
-
-
-
 
     def write_rules(rules)
 
