@@ -52,7 +52,7 @@ class GeoRuleBuilder
 
         #If you are getting boxes exceeding the 25 mile limit (via rule invalidation), you can lower these bounds.
         distance_min = 24 # 19  #22.5 23
-        distance_max = 24.9 # 21  #23, 23.5
+        distance_max = 24.8 # 21  #23, 23.5
 
 
         #if distance > 23.0 and distance <= 23.5 then
@@ -265,9 +265,10 @@ class GeoRuleBuilder
         starting_buffer = starting_buffer - @rule_base.length
 
         #if there is a user-specified buffer or a rule clause passed in allocate 3 characters for () and space between elements.
-        #TODO: implement above IF statements
-        starting_buffer = starting_buffer - 3 #the 3 is allocated for surrounding para
-
+        if !@buffer.nil? and @rule_base.length > 0
+          starting_buffer = starting_buffer - 3
+        end  
+        
         empty_rule = true
 
         rule = ''
@@ -287,10 +288,12 @@ class GeoRuleBuilder
                     rule = "#{rule_base} (#{clause}"
                     empty_rule = false
                 end
-                current_buffer = current_buffer - clause.length
+                current_buffer = starting_buffer - rule.length - 1
 
                 if i == num_of_clauses then
                     rule = "#{rule}) ".strip!
+                    #puts rule.size
+                    #puts rule
                     rules << rule
                 end
             else
@@ -303,6 +306,8 @@ class GeoRuleBuilder
 
                 #We are done here, so add this rule to the rules array...
                 rule = "#{rule}) ".strip!
+                #puts rule.size
+                #puts rule
                 rules << rule
 
                 #handle the clause that would have pushed us over the edge.
@@ -310,6 +315,8 @@ class GeoRuleBuilder
 
                 if i == num_of_clauses then
                     rule = "#{rule}) ".strip!
+                    #puts rule.size
+                    #puts rule
                     rules << rule
                 end
 
