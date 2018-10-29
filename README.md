@@ -1,4 +1,4 @@
-###bounding-boxes
+### bounding-boxes
 
 Simple scripts to break-up a large rectangular geographic area into smaller 25-mile square bounding boxes.
    * All lat/longs are in decimal degrees.
