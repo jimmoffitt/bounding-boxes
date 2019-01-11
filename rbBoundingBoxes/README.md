@@ -72,7 +72,7 @@ This would produce a 'geo_rules.json' file with the following contents:
 ```
 
 
-###Output Options
+### Output Options
 
 #### JSON output
 
@@ -93,9 +93,9 @@ Note that the code will take the passed in file name and update it to *.txt.  So
 
 ```
 
-###Command-line examples
+### Command-line examples
 
-####Generating bounding_box: and/or profile_bounding_box: rule clauses
+#### Generating bounding_box: and/or profile_bounding_box: rule clauses
 
 The '-p' option triggers the generation of profile_bounding_box: Operators for the Gnip Profile Geo enrichment. The '-g' option triggers the production of bounding box Operators for geo-tagged tweets, and is the default if neither option is specified. 
 
@@ -126,7 +126,7 @@ Produces:
 
 ```
 
-####Concatenating other rule elements to generated geographic rule element 
+#### Concatenating other rule elements to generated geographic rule element 
 
 Additional rule clauses can be added on to the generated rules by using the '-r' option. This option enables you to add on other non-geographic rules clauses. If you do not provide opening and closing parentheses they are automatically added and these clauses are ANDed to the geographic clauses.
 
@@ -150,7 +150,7 @@ Produces:
 ```
 
 
-####Reserve a buffer for other rule clauses
+#### Reserve a buffer for other rule clauses
 
 You can reserve a 'character buffer' in the generated rules by using the '-b ###' parameter. The main purpose of this parameter is to reserve rule value characters for addition rule clauses.  It can also be used to affect how many bounding_box clauses get ORed together.  For example the average bounding_box operator requires about 60 characters (and 67 for profile_bounding_box Oerators). In the following example the 'base rule' element is specified as 'flood OR storm OR rain' for another 25 characters. So if you wanted one bounding_box clause per rule you could force that result by setting the reserved character buffer to 900:
 
@@ -179,7 +179,7 @@ Produces:
 }
 ```
 
-####Adding tags to generated rules
+#### Adding tags to generated rules
 
 Rule tags are useful for segregating rules into multiple sets. Rule tags come in handy when developing multiple sets of geographic rules for different areas.  The following command-line sets the rule tag to 'geo_front_range': 
 
