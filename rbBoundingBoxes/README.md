@@ -1,14 +1,19 @@
-##bounding-boxes (Ruby version)
+## bounding-boxes (Ruby version)
 
 A Ruby script for building bounding boxes. (Note that there is also a Python version for the initial prototype, more information [HERE] (https://github.com/jimmoffitt/bounding-boxes/tree/master/pyBoundingBoxes)).
 
-###Introduction
+### References
++ http://en.wikipedia.org/wiki/Great_circle  <-- start here.
++ http://mathworld.wolfram.com/GreatCircle.html  <-- background math.
++ https://gist.github.com/1826175  <-- Python code for sphere distance.
+
+### Introduction
 
 A simple script for producing Gnip bounding boxes for a study area.  Gnip bounding boxes have a 
 25-mile per 'side' limit.  So the script is used to produce 25-mile bounding boxes for a large area such
 as Coloroado.
 
-####Features
+#### Features
 + Supports Gnip Profile Geo profile_bounding_box Operator.
      + '-g' for Twitter geo-tagged bounding boxes.
      + '-p' for Gnip Profile Geo bounding boxes.
@@ -18,13 +23,13 @@ as Coloroado.
 + Enables a character buffer to be specified so space can be reserved for future rule clauses.
      + -b 200    
 
-####Other details
+#### Other details
 + All lat/long coordinates are in decimal degrees.
 + "Study area" refers to the area you want to generate (25-mile) bounding boxes for.
 + "Rule element" refers to a set of rule operators.  Rules we are addressing here typically have a 'business logic' element and a 'geographical' element.  
 
 
-###Usage
+### Usage
 
 The following parameters are used to specify the rules to be generated:
 ```
