@@ -15,7 +15,7 @@ Note that this Python version does not support [Profile Geo](https://developer.t
 
 The Ruby version is available [HERE](https://github.com/jimmoffitt/bounding-boxes/blob/master/rbBoundingBoxes/README.md) and has these additional features:
 
-+ Supports Twitter Profile Geo profile_bounding_box Operator.
++ Supports Twitter [Profile Geo](https://developer.twitter.com/en/docs/tweets/enrichments/overview/profile-geo) profile_bounding_box Operator.
 + Enables a business rules 'element' that can be ANDed with produced geo rules.
 + ORs together bounding box up to 1024 characters.  These rules written in an atomic nature with surrounding parentheses. 
 + Enables a character buffer to be specified so space can be reserved for future rule elements.
