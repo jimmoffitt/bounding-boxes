@@ -28,6 +28,17 @@ as Coloroado.
 + "Study area" refers to the area you want to generate (25-mile) bounding boxes for.
 + "Rule element" refers to a set of rule operators.  Rules we are addressing here typically have a 'business logic' element and a 'geographical' element.  
 
+#### Important note
+
+The geo_rule_builder.rb file defines a GeoRuleBuilder object with two key settings (see below).  Adjust these to match the product/tier you are working with. ```MAX_POSITIVE_CLAUSES``` is an artifact of a time when this limit was imposed on real-time queries. This limit no longer exists, but the related code still has utility for limiting the number of geo operators to write to the rules. 
+
+```ruby
+class GeoRuleBuilder
+
+    MAX_RULE_LENGTH = 1024
+    MAX_POSITIVE_CLAUSES = 30
+```
+
 ### Usage
 
 The following parameters are used to specify the rules to be generated:
