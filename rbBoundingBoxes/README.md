@@ -9,14 +9,14 @@ A Ruby script for building bounding boxes. (Note that there is also a Python ver
 
 ### Introduction
 
-A simple script for producing Tweet geotagged bounding boxes for large study areas.  Bounding boxes have a 
-25-mile per 'side' limit.  So the script is designed to produce matrices of 25-mile bounding boxes for large areas such
+A simple script for producing Tweet geotagged bounding boxes for large study areas. Bounding boxes have a 
+25-mile per 'side' limit. So the script is designed to produce matrices of 25-mile bounding boxes for large areas such
 as Coloroado.
 
 #### Features
-+ Supports Gnip Profile Geo profile_bounding_box Operator.
-     + '-g' for Twitter geo-tagged bounding boxes.
-     + '-p' for Gnip Profile Geo bounding boxes.
++ Supports Twitter [Profile Geo](https://developer.twitter.com/en/docs/tweets/enrichments/overview/profile-geo)  profile_bounding_box Operator.
+     + '-g' for **bounding_box** operators that match on geo-tagged Tweets (completely) within the 25-mile rectangle.
+     + '-p' for **Profile_bounding_box** operators that match on Tweets from an author with a public 'account home' (completely) within the 25-mile rectangle.
 + Enables business rule 'clauses' that can be ANDed with produced geo rules.
      + -r "weather OR snow OR rain OR contains:flood"
 + ORs together bounding box up to 1024 characters. These rules written in an atomic nature with surrounding parentheses.
@@ -27,7 +27,6 @@ as Coloroado.
 + All lat/long coordinates are in decimal degrees.
 + "Study area" refers to the area you want to generate (25-mile) bounding boxes for.
 + "Rule element" refers to a set of rule operators.  Rules we are addressing here typically have a 'business logic' element and a 'geographical' element.  
-
 
 ### Usage
 
@@ -43,13 +42,7 @@ The following parameters are used to specify the rules to be generated:
     -r  => Rule value element that is concatenated with produced bounding box clauses.
     -t  => Rule tag applied to all generated rules.    
     -b  => Number of characters for a buffer to allow other rule elements to be added at a later time. 
-    -p  => Generate profile_bounding_box rule clauses for Gnip Profile Geo enrichment. 
-    -g  => Generate bounding_box rule clauses for geo-tagged tweets (default if neither specified).
-    
-    Output options:
-    -f  => File name to write rules to (defaults to geo-rules.json).
-    -d  => Write rules as simple text for copying/pasting into console.gnip.com Rules user-interface.
-    
+    -p  => Generate profile_bounding_box rule clauses fornip
     -h => Show parameter documentaton.
 ```
 
@@ -76,11 +69,11 @@ This would produce a 'geo_rules.json' file with the following contents:
 
 #### JSON output
 
-By default rules will be written in JSON, as used by the Gnip Rules API. The default file name is geo-rules.json and that can be overridden with the '-f' parameter.  The output above provides an example of the JSON output.  
+By default rules will be written in JSON, as used by the Twitter PowerTrack Rules API and Search APIs. The default file name is geo-rules.json and that can be overridden with the '-f' parameter.  The output above provides an example of the JSON output.  
 
 #### Dashboard output
 
-By specifying that you want to enter rules by using the console.gnip dashboard, a simple text file will be producted whose contents can easily be copied/pasted into the console. This is indicated by including the '-d' (dashboard) parameter. 
+By specifying that you want to enter rules by using the https://console.gnip.com dashboard, a simple text file will be producted whose contents can easily be copied/pasted into the console. This is indicated by including the '-d' (dashboard) parameter. 
 
 ```
 -w -105.45 -e -104.56 -n 40.58 -s 39.9 -d
@@ -97,10 +90,10 @@ Note that the code will take the passed in file name and update it to *.txt.  So
 
 #### Generating bounding_box: and/or profile_bounding_box: rule clauses
 
-The '-p' option triggers the generation of profile_bounding_box: Operators for the Gnip Profile Geo enrichment. The '-g' option triggers the production of bounding box Operators for geo-tagged tweets, and is the default if neither option is specified. 
+The '-p' option triggers the generation of profile_bounding_box: Operators for the Profile Geo enrichment. The '-g' option triggers the production of bounding box Operators for geo-tagged tweets, and is the default if neither option is specified. 
 
 ```
--p  => Generate profile_bounding_box rule clauses for Gnip Profile Geo enrichment. 
+-p  => Generate profile_bounding_box rule clauses for Profile Geo enrichment. 
 
 -g  => Generate bounding_box rule clauses for geo-tagged tweets (default if neither specified).
 
