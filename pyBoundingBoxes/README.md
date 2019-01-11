@@ -9,9 +9,11 @@ A simple script for producing Tweet geotagged bounding boxes for large study are
 25-mile per 'side' limit.  So the script is designed to produce matrices of 25-mile bounding boxes for large areas such
 as Coloroado.
 
-This script represents the prototype of what evolved into the Ruby version.
+This script represents the prototype of what evolved into the Ruby version. 
 
-The Ruby version is available [HERE] (https://github.com/jimmoffitt/bounding-boxes/blob/master/rbBoundingBoxes/README.md) and has these additional features:
+Note that this Python version does not support [Profile Geo](https://developer.twitter.com/en/docs/tweets/enrichments/overview/profile-geo) bounding boxes, while the Ruby version does.
+
+The Ruby version is available [HERE](https://github.com/jimmoffitt/bounding-boxes/blob/master/rbBoundingBoxes/README.md) and has these additional features:
 
 + Supports Twitter Profile Geo profile_bounding_box Operator.
 + Enables a business rules 'element' that can be ANDed with produced geo rules.
