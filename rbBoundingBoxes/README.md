@@ -30,7 +30,7 @@ as Coloroado.
 
 #### Important note
 
-The geo_rule_builder.rb file defines a GeoRuleBuilder object with two key settings (see below).  Adjust these to match the product/tier you are working with. ```MAX_POSITIVE_CLAUSES``` is an artifact of a time when this limit was imposed on real-time queries. This limit no longer exists, but the related code still has utility for limiting the number of geo operators to write to the rules. 
+The geo_rule_builder.rb file defines a GeoRuleBuilder object with two key settings (see below).  Adjust the ```MAX_RULE_LENGTH``` value to match the product/tier you are working with. ```MAX_POSITIVE_CLAUSES``` is an artifact of a time when this limit was imposed on real-time queries. This limit no longer exists, but the related code still has utility for limiting the number of geo operators to write to the rules. 
 
 ```ruby
 class GeoRuleBuilder
