@@ -6,7 +6,7 @@
     * All lat/longs are in decimal degrees.
     * Code starts with the southwest corner. 'Marches' east, then moves up a 'row' and repeats.
     * By default, produces a set of JSON bounding boxes: bounding_box:[west_long south_lat east_long north_lat].
-    * Optionally, it can produce a simple format for direct entry into the Gnip Dashboard.
+    * Optionally, it can produce a simple format for direct entry into the https://console.gnip.com dashboard.
 
     Command-line arguments:
         [] west, south, east, north, tag, filepath, limit_lat, limit_long, dashboard
@@ -43,7 +43,7 @@ optional arguments:
                         File name (and its path) for the JSON rules to get
                         written to. If not provided a file named
                         geo_rules.json is written to local directory.
-  -d, --dashboard       Instead of the Gnip JSON rules format, it produces a
+  -d, --dashboard       Instead of the JSON rules format, it produces a
                         simple format for direct system entry using the Gnip
                         Dashboard. Default file name is geo_rules.txt NOTE:
                         Tags are not supported when using Dashboard.
