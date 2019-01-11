@@ -1,6 +1,6 @@
 ## bounding-boxes (Ruby version)
 
-A Ruby script for building bounding boxes. (Note that there is also a Python version for the initial prototype, more information [HERE] (https://github.com/jimmoffitt/bounding-boxes/tree/master/pyBoundingBoxes)).
+A Ruby script for building bounding boxes. (Note that there is also a Python version for the initial prototype, more information [HERE](https://github.com/jimmoffitt/bounding-boxes/tree/master/pyBoundingBoxes)).
 
 ### References
 + http://en.wikipedia.org/wiki/Great_circle  <-- start here.
@@ -9,8 +9,8 @@ A Ruby script for building bounding boxes. (Note that there is also a Python ver
 
 ### Introduction
 
-A simple script for producing Gnip bounding boxes for a study area.  Gnip bounding boxes have a 
-25-mile per 'side' limit.  So the script is used to produce 25-mile bounding boxes for a large area such
+A simple script for producing Tweet geotagged bounding boxes for large study areas.  Bounding boxes have a 
+25-mile per 'side' limit.  So the script is designed to produce matrices of 25-mile bounding boxes for large areas such
 as Coloroado.
 
 #### Features
