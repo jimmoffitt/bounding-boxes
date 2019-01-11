@@ -8,9 +8,9 @@ Simple scripts to break-up a large rectangular geographic area into smaller 25-m
 
 This script is available in Ruby and Python. 
 
-The [Python code] (https://github.com/jimmoffitt/bounding-boxes/tree/master/pyBoundingBoxes) represents an early prototype design.
+The [Python code](https://github.com/jimmoffitt/bounding-boxes/tree/master/pyBoundingBoxes) represents an early prototype design.
 
-The [Ruby code] (https://github.com/jimmoffitt/bounding-boxes/tree/master/rbBoundingBoxes) has been extended with additional features:
+The [Ruby code](https://github.com/jimmoffitt/bounding-boxes/tree/master/rbBoundingBoxes) has been extended with additional features:
 
 + Supports Profile Geo profile_bounding_box Operator.
 + Enables a business rules 'element' that can be ANDed with generated geo rules.
